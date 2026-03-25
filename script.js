@@ -1,8 +1,9 @@
-let balance = 1200;
+let balance = 5000;
 
 let coins = [
   {name:"BTC", price:100},
-  {name:"ETH", price:80}
+  {name:"ETH", price:80},
+  {name:"charlie kirk", price:67420}
 ];
 
 function updateUI() {
