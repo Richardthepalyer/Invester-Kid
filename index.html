@@ -1,60 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Invester-Kid</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-    }
-    header {
-      background: #020617;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-      color: #38bdf8;
-    }
-    .container {
-      padding: 20px;
-    }
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 10px;
-    }
-    button {
-      background: #22c55e;
-      border: none;
-      padding: 10px;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Invester-Kid</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+}
+header {
+  background: #020617;
+  padding: 15px;
+  text-align: center;
+  font-size: 24px;
+  color: #38bdf8;
+}
+.container { padding: 20px; }
+.card {
+  background: #1e293b;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+button {
+  background: #22c55e;
+  border: none;
+  padding: 8px;
+  margin: 5px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+select {
+  margin-top: 5px;
+}
+</style>
 </head>
+
 <body>
 
 <header>Invester-Kid 🚀</header>
 
 <div class="container">
-  <div class="card">
-    <h2>Bitcoin (BTC)</h2>
-    <p>Price: $--</p>
-    <button>Buy</button>
-    <button>Sell</button>
+  <h2>Balance: $<span id="balance">1200</span></h2>
+
+  <div>
+    <input id="newCoinName" placeholder="New Coin Name">
+    <button onclick="createCoin()">Create Coin ($1100)</button>
   </div>
 
-  <div class="card">
-    <h2>Ethereum (ETH)</h2>
-    <p>Price: $--</p>
-    <button>Buy</button>
-    <button>Sell</button>
-  </div>
+  <div id="coins"></div>
 </div>
+
+<script>
+let balance = 1200;
+let coins = [
+  {name:"BTC", price:100},
+  {name:"ETH", price:80}
+];
+
+function updateUI() {
+  document.getElementById("balance").innerText = balance.toFixed(2);
+  let container = document.getElementById("coins");
+  container.innerHTML = "";
+
+  coins.forEach((coin, index) => {
+    let trend = coin.lastChange || "Stable";
+
+    container.innerHTML += `
+      <div class="card">
+        <h3>${coin.name}</h3>
+        <p>Price: $${coin.price.toFixed(2)}</p>
+
+        <select>
+          <option>${trend}</option>
+        </select>
+
+        <br>
+        <button onclick="buy(${index})">Buy</button>
+        <button onclick="sell(${index})">Sell</button>
+      </div>
+    `;
+  });
+}
+
+function buy(i) {
+  if(balance >= coins[i].price) {
+    balance -= coins[i].price;
+  }
+  updateUI();
+}
+
+function sell(i) {
+  balance += coins[i].price;
+  updateUI();
+}
+
+function createCoin() {
+  let name = document.getElementById("newCoinName").value;
+  if(balance >= 1100 && name) {
+    balance -= 1100;
+    coins.push({name:name.toUpperCase(), price:50});
+  }
+  updateUI();
+}
+
+function randomUpdate() {
+  coins.forEach(coin => {
+
+    let chance = Math.random();
+
+    if(chance < 0.02) {
+      // RUGPULL
+      coin.price *= 0.1;
+      coin.lastChange = "RUGPULL 💀";
+    } else {
+      let change = (Math.random() - 0.5) * 5;
+      coin.price += change;
+
+      if(change > 0) coin.lastChange = "Up 📈";
+      else coin.lastChange = "Down 📉";
+
+      if(coin.price < 1) coin.price = 1;
+    }
+
+  });
+
+  // Random new coin spawn
+  if(Math.random() < 0.05) {
+    coins.push({
+      name: "COIN" + Math.floor(Math.random()*1000),
+      price: Math.random()*100
+    });
+  }
+
+  // Random coin removal
+  if(coins.length > 2 && Math.random() < 0.03) {
+    coins.splice(Math.floor(Math.random()*coins.length), 1);
+  }
+
+  updateUI();
+}
+
+setInterval(randomUpdate, 2000);
+
+updateUI();
+</script>
 
 </body>
 </html>
