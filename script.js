@@ -1,4 +1,4 @@
-let shutdown = false; // 🔴 CHANGE TO true TO SHUT DOWN SITE
+let shutdown = true; // 🔴 CHANGE TO true TO SHUT DOWN SITE
 
 let balance = 1200;
 
