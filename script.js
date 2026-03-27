@@ -1,12 +1,33 @@
-let balance = 5000;
+let shutdown = false; // 🔴 CHANGE TO true TO SHUT DOWN SITE
+
+let balance = 1200;
 
 let coins = [
   {name:"BTC", price:100},
-  {name:"ETH", price:80},
-  {name:"charlie kirk", price:67420}
+  {name:"ETH", price:80}
 ];
 
 function updateUI() {
+
+  // SHUTDOWN SCREEN
+  if (shutdown) {
+    document.body.innerHTML = `
+      <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        background:#7f1d1d;
+        color:white;
+        font-size:30px;
+        text-align:center;
+      ">
+        🚫 We are currently shutdown<br>Please come back later
+      </div>
+    `;
+    return;
+  }
+
   document.getElementById("balance").innerText = balance.toFixed(2);
   let container = document.getElementById("coins");
   container.innerHTML = "";
